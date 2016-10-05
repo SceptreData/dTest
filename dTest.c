@@ -35,15 +35,15 @@ struct _testResults Results;
  *  dTest Suite Major Functions
  */
 
-void InitializeTesting (const char* filename);
+void InitializeTesting (const char* filename)
 {
     Results.active_file = filename;
     Results.active_test = NULL;
-    Results.cur_line_num = 0;
+    Results.cur_line = 0;
     Results.num_tests = 0;
     Results.num_success_tests = 0;
     Results.num_failed_tests = 0;
-    Results.actve_test_failed = 0;
+    Results.active_test_failed = 0;
 }
 
 int EndTesting(void)
@@ -75,10 +75,10 @@ void EndActiveTest(void)
 }
 
 /* The ASSERTs inside your Test function take care of reporting failure */
-void RunTest (testFunction_t Func, const char *func_name, const int func_line_num)
+void RunTest (testFunc_p Func, const char *func_name, const int func_line_num)
 {
     Results.active_test = func_name;
-    Results.cur_line_num = func_line_num;
+    Results.cur_line = func_line_num;
     Results.num_tests++;
     /* If we haven't ran our test function yet, Do it! */
     if (TEST_IS_SAFE()){
@@ -92,10 +92,11 @@ void FailTest(const char *str, int line_num)
     if (Results.active_test_failed)
         return;
 
-    PrintTestStatus(Results.active_file, line_num);
+    //PrintTestStatus(Results.active_file, line_num);
+    PrintTestStatus();
     printf("%s", FAIL_STRING);
     if (str != NULL){
-        printf(": %s", str)
+        printf(": %s", str);
     }
     FAIL_AND_GOTO_EXIT;
 }
@@ -113,6 +114,6 @@ void FailTest(const char *str, int line_num)
 void PrintTestStatus(void)
 {
     if (Results.active_file != NULL){
-        printf("%s: %d : %s : ", Results.active_file, Results.cur_line_num, Results.active_test);
+        printf("%s: %d : %s : ", Results.active_file, Results.cur_line, Results.active_test);
     }
 }

@@ -42,7 +42,7 @@ void FailTest(const char *msg, const int line_num);
 
 #define START_TESTING() InitializeTesting(__FILE__)
 #define END_TESTING() EndTesting()
-#define RUN_TEST (func) RunTest(func, #func, __LINE__)
+#define RUN_TEST(func) RunTest((func), (#func), __LINE__)
 
 /***********************
  *  dTest ASSERT Macros *
