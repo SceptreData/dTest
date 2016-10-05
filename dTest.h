@@ -1,11 +1,11 @@
-#ifndef DTEST_H
-#define DTEST_H
+#ifndef DH
+#define DH
 
 #include <stdio.h>
 #include <setjmp.h>
 
 /* In case there are still trolls who shun C99 */
-#ifndef DTEST_DISABLE_STDBOOL
+#ifndef DISABLE_STDBOOL
 #include <stdbool.h>
 #else
 typedef enum {false = 0, true = !false} bool;
@@ -28,7 +28,7 @@ void FailTest(const char *msg, const int line_num);
  *  Ex: 
  *      void TestAssertFunction(void)
  *       {
- *           TEST_ASSERT(1 == 1)
+ *           ASSERT(1 == 1)
  *       }
  *       int main(void)
  *       {
@@ -49,22 +49,22 @@ void FailTest(const char *msg, const int line_num);
  ***********************/
 
 /* Simple Boolean */
-#define TEST_ASSERT_MSG(condition, msg)                 \
+#define ASSERT_MSG(condition, msg)                 \
     if((condition) != true) FailTest(msg, __LINE__)
-#define TEST_ASSERT_IS_FALSE_MSG(condition, msg)        \
+#define ASSERT_IS_FALSE_MSG(condition, msg)        \
     if((condition) != false) FailTest(msg, __LINE__)
-#define TEST_ASSERT_NULL_MSG(p, msg)                    \
-    TEST_ASSERT_MSG(((p) == NULL), msg)
-#define TEST_ASSERT_NOT_NULL_MSG(p, msg)                \
-    TEST_ASSERT_MSG(((p) != NULL), msg)
+#define ASSERT_IS_NULL_MSG(p, msg)                    \
+    ASSERT_MSG(((p) == NULL), msg)
+#define ASSERT_NOT_NULL_MSG(p, msg)                \
+    ASSERT_MSG(((p) != NULL), msg)
 
-#define TEST_ASSERT(condition)                          \
-    TEST_ASSERT_MSG((condition), "Expression evaluated to FALSE")
-#define TEST_ASSERT_IS_FALSE(condition)                 \
-    TEST_ASSERT_IS_FALSE_MSG((condition), "Expression evaluated to TRUE")
-#define TEST_ASSERT_NULL(p)                             \
-    TEST_ASSERT_NULL_MSG((p), "Pointer is not NULL")
-#define TEST_ASSERT_NOT_NULL(p)                         \
-    TEST_ASSERT_NOT_NULL_MSG((p), "Pointer is NULL")
+#define ASSERT(condition)                          \
+    ASSERT_MSG((condition), "Expression evaluated to FALSE")
+#define ASSERT_IS_FALSE(condition)                 \
+    ASSERT_IS_FALSE_MSG((condition), "Expression evaluated to TRUE")
+#define ASSERT_IS_NULL(p)                             \
+    ASSERT_IS_NULL_MSG((p), "Pointer is not NULL")
+#define ASSERT_NOT_NULL(p)                         \
+    ASSERT_NOT_NULL_MSG((p), "Pointer is NULL")
 
 #endif
