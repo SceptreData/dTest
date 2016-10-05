@@ -8,8 +8,8 @@ static const char LINE_BREAK_STRING[]   = "--------------------";
 /* These EXIT macros save us when our tests fail.*/
 #define TEST_IS_SAFE() (setjmp(Results.exit_point) == 0)
 
-#define FAIL_AND_GOTO_EXIT                    \
-    {Results.active_test_failed = 1;      \
+#define FAIL_AND_GOTO_EXIT                      \
+    {Results.active_test_failed = 1;            \
      longjmp(Results.exit_point, 1);}
 
 /* Forward Output Functions/declarations. */
@@ -30,7 +30,6 @@ struct _testResults
     jmp_buf exit_point;
 };
 struct _testResults Results;
-
 
 /*
  *  dTest Suite Major Functions

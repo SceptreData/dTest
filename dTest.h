@@ -61,7 +61,7 @@ void FailTest(const char *msg, const int line_num);
 #define TEST_ASSERT(condition)                          \
     TEST_ASSERT_MSG((condition), "Expression evaluated to FALSE")
 #define TEST_ASSERT_IS_FALSE(condition)                 \
-    TEST_ASSERT_IS_FALSE_MSG(condition, "Expression evaluated to TRUE")
+    TEST_ASSERT_IS_FALSE_MSG((condition), "Expression evaluated to TRUE")
 #define TEST_ASSERT_NULL(p)                             \
     TEST_ASSERT_NULL_MSG((p), "Pointer is not NULL")
 #define TEST_ASSERT_NOT_NULL(p)                         \
