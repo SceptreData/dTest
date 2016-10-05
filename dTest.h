@@ -1,5 +1,5 @@
-#ifndef DH
-#define DH
+#ifndef DTEST_H
+#define DTEST_H
 
 #include <stdio.h>
 #include <setjmp.h>
