@@ -44,6 +44,8 @@ void FailTest(const char *msg, const int line_num);
 #define END_TESTING() EndTesting()
 #define RUN_TEST(func) RunTest((func), (#func), __LINE__)
 
+/* Forward Test Function Declarations */
+void TestAssertEqualInt(int expected, int result, const char *str, int line_num);
 /***********************
  *  dTest ASSERT Macros *
  ***********************/
@@ -67,4 +69,9 @@ void FailTest(const char *msg, const int line_num);
 #define ASSERT_NOT_NULL(p)                         \
     ASSERT_NOT_NULL_MSG((p), "Pointer is NULL")
 
+/* Comparisons */
+#define ASSERT_EQUAL_INT_MSG(expected, result, msg) \
+    TestAssertEqualInt((expected), (result), (msg), __LINE__)
+#define ASSERT_EQUAL_INT(expected, result)          \
+    TestAssertEqualInt((expected), (result), NULL, __LINE__)
 #endif

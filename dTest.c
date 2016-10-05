@@ -14,7 +14,7 @@ static const char LINE_BREAK_STRING[]   = "--------------------";
 
 /* Forward Output Functions/declarations. */
 #define PRINT_EOL()     putchar('\n')
-void PrintTestStatus(void);
+static void PrintTestInfo(void);
 
 
 /* We store all of our pass/fail results and exit info inside this singleton */
@@ -29,10 +29,10 @@ struct _testResults
     int active_test_failed;
     jmp_buf exit_point;
 };
-struct _testResults Results;
+static struct _testResults Results;
 
 /*
- *  dTest Suite Major Functions
+ *  dTest Major Functions
  */
 
 void InitializeTesting (const char* filename)
@@ -61,12 +61,12 @@ int EndTesting(void)
     return Results.num_failed_tests;
 }
 
-void EndActiveTest(void)
+static void EndActiveTest(void)
 {
     if (Results.active_test_failed){
         Results.num_failed_tests++;
     } else {
-        PrintTestStatus();
+        PrintTestInfo();
         printf("%s", PASS_STRING);
     }
     Results.active_test_failed = 0;
@@ -92,8 +92,8 @@ void FailTest(const char *str, int line_num)
     if (Results.active_test_failed)
         return;
 
-    //PrintTestStatus(Results.active_file, line_num);
-    PrintTestStatus();
+    //PrintTestInfo(Results.active_file, line_num);
+    PrintTestInfo();
     printf("%s", FAIL_STRING);
     if (str != NULL){
         printf(": %s", str);
@@ -105,13 +105,26 @@ void FailTest(const char *str, int line_num)
  * Assert Functions
  * See macros in dTest.h, they will be easier to use.
  */
-
+void TestAssertEqualInt(int expected, int result, const char *str, int line_num)
+{
+    if (Results.active_test_failed)
+        return;
+    if (expected != result){
+        PrintTestInfo();
+        printf("%s: ", FAIL_STRING);
+        printf("Expected %d. Value was %d. ", expected, result);
+        if (str){
+            printf(": %s", str);
+        }
+        FAIL_AND_GOTO_EXIT;
+    }
+}
 
 /*
  * Output Functions
  */
 
-void PrintTestStatus(void)
+static void PrintTestInfo(void)
 {
     if (Results.active_file != NULL){
         printf("%s: %d : %s : ", Results.active_file, Results.cur_line, Results.active_test);

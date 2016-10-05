@@ -1,4 +1,3 @@
-#include <assert.h>
 #include "dTest.h"
 
 void TestTheTests(void)
@@ -9,11 +8,17 @@ void TestTheTests(void)
     ASSERT_IS_NULL(p);
 }
 
+void TestEqualInt(void)
+{
+    ASSERT_EQUAL_INT(10, 10);
+    ASSERT_EQUAL_INT_MSG(1, 0, "Wow! This number isn't the same at all!");
+}
+
 int main(void)
 {
     START_TESTING();
     RUN_TEST(TestTheTests);
+    RUN_TEST(TestEqualInt);
     int fails = END_TESTING();
-    assert(fails == 0);
-    return 0;
+    return fails;
 }
