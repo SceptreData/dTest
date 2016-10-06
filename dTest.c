@@ -6,7 +6,7 @@ static const char FAIL_STRING[]         = "FAIL";
 static const char LINE_BREAK_STRING[]   = "--------------------";
 
 /* These EXIT macros save us when our tests fail.*/
-#define TEST_IS_SAFE() (setjmp(Results.exit_point) == 0)
+#define TEST_HAS_NOT_FAILED() (setjmp(Results.exit_point) == 0)
 
 #define FAIL_AND_GOTO_EXIT                      \
     {Results.active_test_failed = 1;            \
@@ -35,7 +35,7 @@ static struct _testResults Results;
  *  dTest Major Functions
  */
 
-void InitializeTesting (const char* filename)
+void StartTesting (const char* filename)
 {
     Results.active_file = filename;
     Results.active_test = NULL;
@@ -75,14 +75,14 @@ static void EndActiveTest(void)
 }
 
 /* The ASSERTs inside your Test function take care of reporting failure */
-void RunTest (testFunc_p Func, const char *func_name, const int func_line_num)
+void RunTest (void (*Function)(void), const char *func_name, const int func_line_num)
 {
     Results.active_test = func_name;
     Results.cur_line = func_line_num;
     Results.num_tests++;
-    /* If we haven't ran our test function yet, Do it! */
-    if (TEST_IS_SAFE()){
-        Func();
+    /* If we haven't failed yet, set the Exit point so we can return in case of fail.*/
+    if (TEST_HAS_NOT_FAILED()){
+        Function();
     }
     EndActiveTest();
 }
@@ -94,7 +94,7 @@ void FailTest(const char *str, int line_num)
 
     //PrintTestInfo(Results.active_file, line_num);
     PrintTestInfo();
-    printf("%s", FAIL_STRING);
+    printf(FAIL_STRING);
     if (str != NULL){
         printf(": %s", str);
     }
@@ -111,14 +111,28 @@ void TestAssertEqualInt(int expected, int result, const char *str, int line_num)
         return;
     if (expected != result){
         PrintTestInfo();
-        printf("%s: ", FAIL_STRING);
-        printf("Expected %d. Value was %d. ", expected, result);
+        printf(FAIL_STRING);
+        printf(": Expected %d. Value was %d. ", expected, result);
         if (str){
             printf(": %s", str);
         }
         FAIL_AND_GOTO_EXIT;
     }
 }
+
+void TestAssertEqualFloat(float expected, float result, const char *str, int line_num)
+{
+    if (Results.active_test_failed)
+        return;
+    if (expected != result){
+        PrintTestInfo();
+        printf(FAIL_STRING);
+        printf(": Expected %.3f. Value was %.3f. ", expected, result);
+        if (str){
+            printf(": %s", str);
+        }
+        FAIL_AND_GOTO_EXIT;
+    }
 
 /*
  * Output Functions

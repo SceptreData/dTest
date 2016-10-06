@@ -12,18 +12,11 @@ typedef enum {false = 0, true = !false} bool;
 #endif
 
 /* Function Pointer typedef */
-typedef void (*testFunc_p)(void);
 
-/* Forward function declarations. I reccomend you use the macros just below instead. */
-void InitializeTesting (const char* filename);
-int EndTesting (void);
-
-void RunTest(testFunc_p Func, const char *func_name, const int func_line_num);
-void FailTest(const char *msg, const int line_num);
 
 /* *******************************************************************
  *  dTest Suite Functions
- *  Make sure to use START_TESTING() before you try to RUN_TEST
+ *  Begin your test with START_TESTING() before trying to RUN_TEST()
  *  The function you pass to RUN_TEST should contain your ASSERTS.
  *  Ex: 
  *      void TestAssertFunction(void)
@@ -36,16 +29,12 @@ void FailTest(const char *msg, const int line_num);
  *           RUN_TEST(TestAssertFunction);
  *           return END_TESTING();
  *       }
- *  Try to use the macros below, they pass in more information and are 
- *  more succinct.
  *********************************************************************/
 
-#define START_TESTING() InitializeTesting(__FILE__)
+#define START_TESTING() StartTesting(__FILE__)
 #define END_TESTING() EndTesting()
 #define RUN_TEST(func) RunTest((func), (#func), __LINE__)
 
-/* Forward Test Function Declarations */
-void TestAssertEqualInt(int expected, int result, const char *str, int line_num);
 /***********************
  *  dTest ASSERT Macros *
  ***********************/
@@ -74,4 +63,15 @@ void TestAssertEqualInt(int expected, int result, const char *str, int line_num)
     TestAssertEqualInt((expected), (result), (msg), __LINE__)
 #define ASSERT_EQUAL_INT(expected, result)          \
     TestAssertEqualInt((expected), (result), NULL, __LINE__)
+
+/* ASSERT Functions */
+void TestAssertEqualInt(int expected, int result, const char *str, int line_num);
+
+/* Init and Conclusion functions */
+int EndTesting(void);
+
+/* Control Flow functions */
+void RunTest(void (*Function)(void), const char *func_name, const int func_line_num);
+void FailTest(const char *msg, const int line_num);
+
 #endif
